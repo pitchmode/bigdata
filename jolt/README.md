@@ -2,6 +2,7 @@
 Drop Null
 
 Input:
+```
 [
   {
     "refinery_id": "5682",
@@ -18,9 +19,10 @@ Input:
     "sync_timestamp": "2021-03-22 15:39:45"
   },
 ]
-
+```
 
 Transform:
+```
 [
   {
     "operation": "modify-overwrite-beta",
@@ -29,8 +31,10 @@ Transform:
     }
 }
 ]
+```
 
 Output:
+```
 [
   {
     "refinery_id": "5682",
@@ -43,3 +47,4 @@ Output:
     "sync_timestamp": "2021-03-22 15:39:45"
   },
 ]
+```

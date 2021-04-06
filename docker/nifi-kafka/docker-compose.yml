@@ -1,0 +1,50 @@
+# codeVersion: 1
+
+#version '2.1'
+version: '3'
+
+services:
+  zookeeper:
+    image: bitnami/zookeeper:latest
+    container_name: zookeeper
+    ports:
+      - "2181:2181"
+    volumes:
+      - ./zk-single-kafka-single/zoo1/data:/data
+      - ./zk-single-kafka-single/zoo1/datalog:/datalog
+    networks:
+      - backbone
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: debezium/kafka:latest
+    container_name: kafka
+    ports:
+      - 9092:9092
+    links:
+      - zookeeper:zookeeper
+    networks:
+      - backbone
+    environment:
+      - BROKER_ID=1
+      - ZOOKEEPER_CONNECT=zookeeper
+  nifi:
+    image: xemuliam/nifi:1.9
+    container_name: nifi
+    ports:
+      - 7080:8080
+    volumes: 
+      - ./nifi-data/logs:/opt/nifi/logs
+      - ./nifi-data/flowfile_repository:/opt/nifi/flowfile_repository
+      - ./nifi-data/database_repository:/opt/nifi/database_repository
+      - ./nifi-data/content_repository:/opt/nifi/content_repository
+      - ./nifi-data/provenance_repository:/opt/nifi/provenance_repository
+      - ./nifi-data/datafiles:/opt/datafiles
+      - ./nifi-data/scriptfiles:/opt/scriptfiles
+      - ./nifi-data/certfiles:/opt/certfiles
+    networks:
+      - backbone
+
+networks:
+  backbone:
+    driver: bridge
